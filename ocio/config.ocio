@@ -88,7 +88,7 @@ colorspaces:
     to_reference: !<GroupTransform>
       children:
         - !<FileTransform> {src: st2084_to_nits.spi1d, interpolation: linear}
-        - !<MatrixTransform> {matrix: [100, 0, 0, 0, 0, 100, 0, 0, 0, 0, 100, 0, 0, 0, 0, 1]}
+        - !<MatrixTransform> {matrix: [0.01, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 1]}
 
   - !<ColorSpace>
     name: Krita Log

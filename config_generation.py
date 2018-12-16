@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     # Shape a scaling matrix for ST.2084
     ocio_st2084_scale = numpy.identity(4)
-    ocio_st2084_scale *= 100.
+    ocio_st2084_scale /= 100.
     ocio_st2084_scale = ocio_st2084_scale.flatten()
     ocio_st2084_scale[-1] = 1.
     
