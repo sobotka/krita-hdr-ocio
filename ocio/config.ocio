@@ -1,0 +1,103 @@
+ocio_profile_version: 1
+
+search_path: luts:looks
+strictparsing: true
+luma: [0.2126, 0.7152, 0.0722]
+
+roles:
+  color_picking: Krita Log
+  color_timing: Krita Log
+  compositing_log: Krita Log
+  data: Non-Colour Data
+  default: Krita Log
+  matte_paint: Krita Log
+  reference: BT.2020 SR Linear
+  scene_linear: BT.2020 SR Linear
+  texture_paint: Krita Log
+
+displays:
+  100 nit REC.709 E2.2 Nonlinear:
+    - !<View> {name: 2.2 Transfer, colorspace: BT.709 E2.2 Nonlinear}
+    - !<View> {name: Scene Referred Linear, colorspace: BT.709 SR Linear}
+  10000 nit BT.2020 ST.2084 Nonlinear:
+    - !<View> {name: ST.2084 Transfer, colorspace: BT.2020 ST.2084 Nonlinear}
+    - !<View> {name: Scene Referred Linear, colorspace: BT.2020 SR Linear}
+
+active_displays: [100 nit REC.709 E2.2 Nonlinear]
+active_views: [ST.2084 Transfer]
+
+colorspaces:
+  - !<ColorSpace>
+    name: BT.2020 SR Linear
+    family: Colorimetry
+    equalitygroup: ""
+    bitdepth: 32f
+    description: |
+      REC.2020 scene referred linear
+    isdata: false
+    allocation: lg2
+    allocationvars: [-16.6096, 6.64386]
+
+  - !<ColorSpace>
+    name: Non-Colour Data
+    family: Core
+    equalitygroup: ""
+    bitdepth: 32f
+    description: |
+      Non-Colour Data
+    isdata: true
+    allocation: uniform
+
+  - !<ColorSpace>
+    name: BT.709 SR Linear
+    family: Colorimetry
+    equalitygroup: ""
+    bitdepth: unknown
+    description: |
+      Colorimetric BT.709 transform
+    isdata: false
+    allocation: uniform
+    to_reference: !<GroupTransform>
+      children:
+        - !<MatrixTransform> {matrix: [0.412391, 0.357584, 0.180481, 0, 0.212639, 0.715169, 0.0721923, 0, 0.0193308, 0.119195, 0.950532, 0, 0, 0, 0, 1]}
+        - !<MatrixTransform> {matrix: [0.636958, 0.144617, 0.168881, 0, 0.2627, 0.677998, 0.0593017, 0, 4.99411e-17, 0.0280727, 1.06099, 0, 0, 0, 0, 1], direction: inverse}
+
+  - !<ColorSpace>
+    name: BT.709 E2.2 Nonlinear
+    family: Colorimetry
+    equalitygroup: ""
+    bitdepth: unknown
+    description: |
+      Colorimetric BT.709 2.2 Transfer
+    isdata: false
+    allocation: uniform
+    to_reference: !<GroupTransform>
+      children:
+        - !<ExponentTransform> {value: [2.2, 2.2, 2.2, 1]}
+        - !<ColorSpaceTransform> {src: BT.709 SR Linear, dst: BT.2020 SR Linear}
+
+  - !<ColorSpace>
+    name: BT.2020 ST.2084 Nonlinear
+    family: Colorimetry
+    equalitygroup: ""
+    bitdepth: unknown
+    description: |
+      Colorimetric BT.2020 ST.2084 Transfer
+    isdata: false
+    allocation: uniform
+    to_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: st2084_to_nits.spi1d, interpolation: linear}
+        - !<MatrixTransform> {matrix: [100, 0, 0, 0, 0, 100, 0, 0, 0, 0, 100, 0, 0, 0, 0, 1]}
+
+  - !<ColorSpace>
+    name: Krita Log
+    family: Transfer
+    equalitygroup: ""
+    bitdepth: 32f
+    description: |
+      Krita Log
+    isdata: false
+    allocation: lg2
+    allocationvars: [-16.6096, 6.64386]
+    from_reference: !<AllocationTransform> {allocation: lg2, vars: [-16.6096, 6.64386]}
