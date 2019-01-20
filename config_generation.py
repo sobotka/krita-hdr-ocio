@@ -28,9 +28,6 @@ if __name__ == "__main__":
         [0., 1.]
     )
 
-    testing = [1., 0.]
-    print(*testing)
-    print(st2084.table[1])
     colour.write_LUT(st2084, "./ocio/luts/st2084_to_nits.spi1d", decimals=16)
 
     # Shape a scaling matrix for ST.2084
@@ -38,8 +35,7 @@ if __name__ == "__main__":
     ocio_st2084_scale /= 100.
     ocio_st2084_scale = ocio_st2084_scale.flatten()
     ocio_st2084_scale[-1] = 1.
-    
-    print(ocio_st2084_scale)
+
     # Shape the BT.709 to XYZ array for OpenColorIO
     ocio_bt709_to_xyz = numpy.pad(
         bt709_npm,
@@ -49,7 +45,6 @@ if __name__ == "__main__":
     ocio_bt709_to_xyz = ocio_bt709_to_xyz.flatten()
     ocio_bt709_to_xyz[-1] = 1.
 
-    print(ocio_bt709_to_xyz.shape)
     # Shape the BT.2020 to XYZ array for OpenColorIO
     ocio_bt2020_to_xyz = numpy.pad(
         bt2020_npm,
@@ -205,6 +200,12 @@ if __name__ == "__main__":
     )
     transform_transfer = PyOpenColorIO.ExponentTransform()
     transform_transfer.setValue([2.2, 2.2, 2.2, 1.])
+    # This should likely be a *nonlinear* transfer function
+    # to scale the range down to 80 nits but hold middle grey
+    # at 18-20 nit range.
+    transform_scale = PyOpenColorIO.AllocationTransform()
+    transform_scale.setAllocation(PyOpenColorIO.Constants.ALLOCATION_UNIFORM)
+    transform_scale.setVars([0.0, 0.8])
     transform_colorimetry = PyOpenColorIO.ColorSpaceTransform()
     transform_colorimetry.setSrc("BT.709 SR Linear")
     transform_colorimetry.setDst("BT.2020 SR Linear")
@@ -213,6 +214,7 @@ if __name__ == "__main__":
     transform.setTransforms(
         [
             transform_transfer,
+            transform_scale,
             transform_colorimetry
         ]
     )
