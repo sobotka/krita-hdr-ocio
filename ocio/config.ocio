@@ -74,7 +74,7 @@ colorspaces:
     to_reference: !<GroupTransform>
       children:
         - !<ExponentTransform> {value: [2.2, 2.2, 2.2, 1]}
-        - !<AllocationTransform> {allocation: uniform, vars: [0, 0.8]}
+        - !<AllocationTransform> {allocation: uniform, vars: [0, 1.25]}
         - !<ColorSpaceTransform> {src: BT.709 SR Linear, dst: BT.2020 SR Linear}
 
   - !<ColorSpace>

@@ -205,7 +205,7 @@ if __name__ == "__main__":
     # at 18-20 nit range.
     transform_scale = PyOpenColorIO.AllocationTransform()
     transform_scale.setAllocation(PyOpenColorIO.Constants.ALLOCATION_UNIFORM)
-    transform_scale.setVars([0.0, 0.8])
+    transform_scale.setVars([0.0, 1.25])
     transform_colorimetry = PyOpenColorIO.ColorSpaceTransform()
     transform_colorimetry.setSrc("BT.709 SR Linear")
     transform_colorimetry.setDst("BT.2020 SR Linear")
